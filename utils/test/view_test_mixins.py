@@ -20,6 +20,12 @@ class TemplateViewTestMixin:
         if not getattr(self, 'url'):
             raise AttributeError(self.error_msg % 'url')
 
+        # check if there's a user attached to the test that may have
+        #   required permissions
+        if hasattr(self, 'user'):
+            # assumes user was already assigned required permissions
+            self.client.force_login(getattr(self, 'user'))
+
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
 
